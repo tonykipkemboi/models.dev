@@ -38,6 +38,7 @@ import { modular } from "./providers/modular.js";
 import { morph } from "./providers/morph.js";
 import { nanoGpt } from "./providers/nano-gpt.js";
 import { nearai } from "./providers/nearai.js";
+import { nebius } from "./providers/nebius.js";
 import { novitaAi } from "./providers/novita-ai.js";
 import { ofox } from "./providers/ofox.js";
 import { ollamaCloud } from "./providers/ollama-cloud.js";
@@ -54,7 +55,7 @@ import { wandb } from "./providers/wandb.js";
 import { xai } from "./providers/xai.js";
 import type { AgentModule, SyncModule, SyncResult } from "./types.js";
 
-export const modules: Record<string, SyncModule<any>> = { aiand, aimlapi, ambient, anthropic, baseten, chutes, "cloudflare-ai-gateway": cloudflareAiGateway, "cloudflare-workers-ai": cloudflareWorkersAi, cortecs, crossmodel, deepinfra, digitalocean, edenai, empiriolabs, engy, "fireworks-ai": fireworksAi, friendli, "github-copilot": githubCopilot, google, huggingface, hyper, inceptron, kilo, llmgateway, "llmgateway-providers": llmgatewayProviders, "merge-gateway": mergeGateway, meta, mistral, modular, morph, "nano-gpt": nanoGpt, nearai, "novita-ai": novitaAi, ofox, "ollama-cloud": ollamaCloud, openai, openrouter, ovhcloud, pioneer, prime, requesty, tinfoil, venice, vercel, wandb, xai };
+export const modules: Record<string, SyncModule<any>> = { aiand, aimlapi, ambient, anthropic, baseten, chutes, "cloudflare-ai-gateway": cloudflareAiGateway, "cloudflare-workers-ai": cloudflareWorkersAi, cortecs, crossmodel, deepinfra, digitalocean, edenai, empiriolabs, engy, "fireworks-ai": fireworksAi, friendli, "github-copilot": githubCopilot, google, huggingface, hyper, inceptron, kilo, llmgateway, "llmgateway-providers": llmgatewayProviders, "merge-gateway": mergeGateway, meta, mistral, modular, morph, "nano-gpt": nanoGpt, nearai, nebius, "novita-ai": novitaAi, ofox, "ollama-cloud": ollamaCloud, openai, openrouter, ovhcloud, pioneer, prime, requesty, tinfoil, venice, vercel, wandb, xai };
 
 // Hosts with no API to sync from: an agent reads their docs and writes an observation file.
 export const agents: Record<string, AgentModule> = { "amazon-bedrock": amazonBedrock, azure, "google-vertex": googleVertex };

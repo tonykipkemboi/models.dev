@@ -492,3 +492,16 @@ Some provider scripts in `packages/core/script/generate-*.ts` are not wired into
 - `preserveDescriptions` is off: the runner must not re-inject a pre-factor authored description when the translator leaves it unset, or a full-inline → factored transition would recreate a lab-identical override. Created files get a leading header from `translateModel` naming the single reasoning wire path (`reasoning_effort`, "none" = off). `toggle` and `budget_tokens` controls are parsed (so a feed that publishes one never aborts the run) but never written, from feed or authored file: ai& has no separate on/off or token-budget field, so they cannot be true of this host.
 - `interleaved` comes from the feed when published, else the authored value, else `{ field = "reasoning_content" }` for reasoners — every ai& reasoner streams thinking in `message.reasoning_content`, so a new reasoner is never created without its side channel.
 - A reasoner never gets an invented `[]`: an omitted feed list keeps the authored controls, and a non-empty list whose effort values the schema doesn't know yet does too; when neither yields a schema-valid set the model fails with `MissingReasoningOptionsError` — the runner preserves the local file and routes the id to the missing-model issue flow. Only an explicit `[]` published by the feed is written as "no caller control".
+
+## Nebius Token Factory Notes
+
+- Implemented on the new engine only: `packages/core/src/sync2/providers/nebius.ts`. Run it with `bun models:sync2 nebius`.
+- Source endpoint: `https://tokenfactory.nebius.com/api/public/models_info`, Token Factory's public model catalog. No authentication is required, so the workflow needs no secret.
+- Each catalog entry lists one or more flavors. A flavor's `model_id` is the ID Token Factory serves and the file path here.
+- The catalog is authoritative for input and output prices, the cached-input price when a flavor lists one, the context window (`max_model_len`, the number `/v1/models` returns as `context_length`), and whether a chat model is served on the Responses API (the `responses_api` use case). A flavor with no cached price leaves the file's cache read price alone.
+- Modalities, capabilities, reasoning controls, output limits, names and dates stay hand-authored. The catalog's `model_type` and `use_cases` disagree on image input for some models, and it says nothing about reasoning controls.
+- The authenticated `GET /v1/models?verbose=true` is not used: it needs a key, and an earlier sync attempt (#2971) saw it return a default `context_length` of 8000 for many models.
+- New models are gaps (`creates: "gap"`), so a person or the gap agent checks reasoning controls on this host before a file exists. An entry whose `status` isn't `active`, or that has no price, only updates a file that already exists.
+- A file the catalog no longer lists is removed (`removals: "delete"`): Token Factory doesn't reroute a retired model ID, so a leftover file is a model that fails at request time.
+- Token Factory's deprecation notices are not read: a model stays until the catalog drops it. To keep a model out by hand, list it in `providers/nebius/sync-ignore.toml`.
+- An empty or malformed catalog fails the sync before anything is written.
